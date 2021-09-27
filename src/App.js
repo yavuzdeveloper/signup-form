@@ -16,6 +16,7 @@ function App() {
     const [isConfirm, setIsConfirm] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [selectedDate, handleDateChange] = useState(new Date());
+    
     const classes = useStyles();
     
     const handleChange = (panel) => (event, isExpanded) => {
@@ -56,7 +57,7 @@ function App() {
         </AppBar>
         { !isConfirm && <Container maxWidth="xs">
             <Paper className={classes.paper}>
-                <form onSubmit={handleConfirm}>
+                <form onConfirm={handleConfirm}>
                     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                         <AccordionSummary className={classes.accordionSummary}>
                             <Typography className={classes.heading}>Sign up step-1</Typography>
@@ -64,16 +65,16 @@ function App() {
                         <AccordionDetails>
                             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`}>
                                 <TextField 
-                                    name="User name"  
                                     variant="outlined" 
                                     label="User name"
                                     onChange={(e) => setUserName(e.target.value)}
+                                    data-testid="userName"
                                 />
                                 <TextField 
-                                    name="Phone number"  
                                     variant="outlined" 
                                     label="Phone number"  
                                     onChange={(e) => setPhoneNumber(e.target.value)}
+                                    data-testid="PhoneNumber"
                                 />
                             </form>
                         </AccordionDetails>
@@ -88,10 +89,10 @@ function App() {
                         <AccordionDetails>
                             <form  className={classes.form}>
                                 <TextField 
-                                    name="Email Address"  
                                     variant="outlined" 
                                     label="Email Address"
                                     onChange={(e) => setEmail(e.target.value)} 
+                                    data-testid="email"
                                 />
                                 <div className={classes.dateOfBirth}>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -104,6 +105,7 @@ function App() {
                                             onChange={handleDateChange}
                                             error={new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(selectedDate)}
                                             helperText={new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(selectedDate) > 2003 ? 'You must be over 18 years old!' : " "}
+                                            data-testid="dateOfBirth"
                                         />
                                     </MuiPickersUtilsProvider>
                                 </div>
@@ -134,7 +136,7 @@ function App() {
                                 </List>
                             </AccordionDetails>
                             <AccordionActions>
-                                <Button onClick={handleConfirm} className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Confirmation</Button>
+                                <Button onClick={handleConfirm} className={classes.buttonConfirm} variant="contained" color="primary" size="large" type="confirm" fullWidth>Confirm</Button>
                             </AccordionActions>
                     </Accordion>
                     </form>

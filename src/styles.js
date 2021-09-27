@@ -18,9 +18,6 @@ export default makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'left',
   },
-  buttonSubmit: {
-    marginBottom: 20,
-  },
   appBar: {
     borderRadius: 15,
     margin: '30px 0',

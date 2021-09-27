@@ -1,48 +1,100 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
 
 
-test('renders sign up form title', () => {
+test('renders sign up form title and accordion headings', () => {
   render(<App />);
-  const titleElement = screen.getByText(/sign up form/i);
-  const userDetailOneElement = screen.getByText(/user detail-1/i);
-  const userDetailTwoElement = screen.getByText(/user detail-2/i);
-  const userInformationSubmitElement = screen.getByText(/user informations/i);
 
-
-  expect(titleElement).toBeInTheDocument();
-  expect(userDetailOneElement).toBeInTheDocument();
-  expect(userDetailTwoElement).toBeInTheDocument();
-  expect(userInformationSubmitElement).toBeInTheDocument();
+  expect(screen.getByRole('heading', {  name: /sign up form/i})).toBeEnabled();
+  expect(screen.getByText(/sign up step-1/i)).toBeEnabled();
+  expect(screen.getByText(/sign up step-2/i)).toBeEnabled();
+  expect(screen.getByText(/sign up step-3/i)).toBeEnabled();
 });
 
-test('renders submit button', () => {
+test('sign up step-1 button works correctly', () => {
   render(<App />);
-  expect(screen.getByRole('button', { name: /submit/i})).toBeEnabled();
+
+  userEvent.click(screen.getByRole('button',  { name: /sign up step-1/i}));
+
+  expect(screen.getByTestId('userName')).toBeEnabled();
+  expect(screen.getByTestId('PhoneNumber')).toBeEnabled();
+  expect(screen.getByRole('button', {  name: /next/i})).toBeEnabled();
 });
 
-test('renders input labels', () => {
-  // render(<App expanded={true} />);
+test('sign up step-2 button works correctly', () => {
+  render(<App />);
 
-// <button>Submit</button>
-fireEvent(screen.getByText('User detail-1'),
-  new MouseEvent('click', {
-    expanded: true,
-    // cancelable: true,
-  }),
-)
+  userEvent.click(screen.getByRole('button',  { name: /sign up step-2/i}));
 
-  // userEvent.type(screen.getByPlaceholderText(/user namet/i), "yavuz");
-  // userEvent.type(screen.getByPlaceholderText(/phone number/i), "0754653201");
+  expect(screen.getByTestId('email')).toBeEnabled()
+  expect(screen.getByTestId('dateOfBirth')).toBeEnabled();
+  expect(screen.getByText(/you must be over 18 years old!/i)).toBeEnabled();
+  expect(screen.getByRole('button', {  name: /next/i})).toBeEnabled();
+});
 
-  // expect(screen.getByRole('button', { name: /next/i })).toBeEnabled();
+test('sign up step-3 button works correctly', () => {
+  render(<App />);
 
+  userEvent.click(screen.getByRole('button',  { name: /sign up step-3/i}));
+
+
+  expect(screen.getByText(/user name:/i)).toBeEnabled();
+  expect(screen.getByText(/phone number:/i)).toBeEnabled();
+  expect(screen.getByText(/email:/i)).toBeEnabled();
+  expect(screen.getByText(/birth date:/i)).toBeEnabled();
+  expect(screen.getByRole('button', {  name: /confirm/i})).toBeEnabled();
+});
+
+test('renders confirm button', () => {
+  render(<App />);
+
+  userEvent.click(screen.getByRole('button',  { name: /sign up step-3/i}));
+  // userEvent.click(screen.getByRole('button', {  name: /confirm/i}));
+  //expect(screen.getByText(/Please fill in the required fields/i)).toBeEnabled();
+
+  //expect(screen.getByRole('heading', {  name: /congratulations, you have successfully signed up\./i})).toBeEnabled();
 });
 
 
-// test('submit works properly', () => {   
+
+
+
+
+
+
+
+//screen.getByText(/sign up step\-1/i)
+//container.querySelector('#root > div > div > form > div:nth-child(1) > div:nth-child(1) > div')
+
+
+
+// test('renders submit button', () => {
+//   render(<App />);
+//   expect(screen.getByRole('button', { name: /confirm/i})).toBeEnabled();
+// });
+
+// test('renders input labels', () => {
+//   // render(<App expanded={true} />);
+
+// // <button>Submit</button>
+// fireEvent(screen.getByText('User detail-1'),
+//   new MouseEvent('click', {
+//     expanded: true,
+//     // cancelable: true,
+//   }),
+// )
+
+//   // userEvent.type(screen.getByPlaceholderText(/user namet/i), "yavuz");
+//   // userEvent.type(screen.getByPlaceholderText(/phone number/i), "0754653201");
+
+//   // expect(screen.getByRole('button', { name: /next/i })).toBeEnabled();
+
+// });
+
+
+// test('confirm works properly', () => {   
 //   const mockFormData = {
 //     userName: 'test name',
 //     phoneNumber: 'test last name', 
@@ -56,7 +108,7 @@ fireEvent(screen.getByText('User detail-1'),
 //   userEvent.paste(getByLabelText(/email/i), mockFormData.email)
 //   userEvent.paste(getByLabelText(/birth date/i), mockFormData.selectedDate)
 
-//   userEvent.click(getByRole('button', { name: /submit/i }))
+//   userEvent.click(getByRole('button', { name: /confirm/i }))
 
 //   getByText(/ Congratulations, you have successfully signed up./i)
 // });

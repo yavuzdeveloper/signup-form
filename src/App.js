@@ -13,9 +13,7 @@ function App() {
     const [userName, setUserName] = useState(" ");
     const [phoneNumber, setPhoneNumber] = useState(" ");
     const [email, setEmail] = useState(" ");
-    const [isNextOne, setIsNextOne] = useState(false);
-    const [isNextTwo, setIsNextTwo] = useState(false);
-    const [isSubmit, setIsSubumit] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [selectedDate, handleDateChange] = useState(new Date());
     const classes = useStyles();
@@ -24,30 +22,28 @@ function App() {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const nextOne = () => {
+    const nextStepOne = () => {
         if(userName.trim() === "" || phoneNumber.trim() === "" ){
             alert("Please fill in the required fields");
         }else{ 
-            setExpanded(false);
-            setIsNextOne(true);
+            setExpanded(true);
         }
     }
 
-    const nextTwo = () => {
+    const nextStepTwo = () => {
         if(email.trim() === "" || new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(selectedDate).trim() === "" ){
             alert("Please fill in the required fields");
         }else if(new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(selectedDate) < 2003){
-            setExpanded(false);
-            setIsNextTwo(true);
+            setExpanded(true);
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleConfirm = (e) => {
         e.preventDefault();
-        if(isNextOne && isNextTwo){
-            setIsSubumit(true);
-        }else{
+        if(userName.trim() === "" || phoneNumber.trim() === "" || email.trim() === "" || new Intl.DateTimeFormat('en-US', {year: 'numeric'}).format(selectedDate).trim() === ""){
             alert("Please fill in the required fields");
+        }else{
+            setIsConfirm(true);
         }        
     };
 
@@ -58,12 +54,12 @@ function App() {
                 Sign up form 
             </Typography>
         </AppBar>
-        { !isSubmit && <Container maxWidth="lg">
+        { !isConfirm && <Container maxWidth="xs">
             <Paper className={classes.paper}>
-                <form onSubmit={handleSubmit}>
-                    <Accordion data-testid='panel1' expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                <form onSubmit={handleConfirm}>
+                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                         <AccordionSummary className={classes.accordionSummary}>
-                            <Typography className={classes.heading}>User detail-1</Typography>
+                            <Typography className={classes.heading}>Sign up step-1</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`}>
@@ -82,12 +78,12 @@ function App() {
                             </form>
                         </AccordionDetails>
                         <AccordionActions>
-                            <Button variant="contained" color="primary" size="small" onClick={() => nextOne('panel1')}>Next</Button>
+                            <Button variant="contained" color="primary" size="small" onClick={() => nextStepOne('panel1')}>Next</Button>
                         </AccordionActions>
                     </Accordion>
                     <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                         <AccordionSummary className={classes.accordionSummary}>
-                            <Typography className={classes.heading}>User detail-2</Typography>
+                            <Typography className={classes.heading}>Sign up step-2</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <form  className={classes.form}>
@@ -114,12 +110,12 @@ function App() {
                         </form>
                         </AccordionDetails>
                         <AccordionActions>
-                            <Button variant="contained" color="primary" size="small" onClick={() => nextTwo('panel2')}>Next</Button>
+                            <Button variant="contained" color="primary" size="small" onClick={() => nextStepTwo('panel2')}>Next</Button>
                         </AccordionActions>
                     </Accordion>
                     <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
                         <AccordionSummary className={classes.accordionSummary}>
-                            <Typography className={classes.heading}>User informations</Typography>
+                            <Typography className={classes.heading}>Sign up step-3</Typography>
                         </AccordionSummary>
                             <AccordionDetails>
                                 <List>
@@ -137,12 +133,14 @@ function App() {
                                     </ListItem>
                                 </List>
                             </AccordionDetails>
+                            <AccordionActions>
+                                <Button onClick={handleConfirm} className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Confirmation</Button>
+                            </AccordionActions>
                     </Accordion>
-                        <Button onClick={handleSubmit} className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                     </form>
                 </Paper>
             </Container>}
-            {isSubmit && 
+            {isConfirm && 
                 <Typography className={classes.heading} variant="h4" align="center">
                     Congratulations, you have successfully signed up.
                 </Typography>
